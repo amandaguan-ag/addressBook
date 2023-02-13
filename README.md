@@ -2,29 +2,27 @@
 
 #### By Amanda Guan
 
-####  An address book application using constructors and prototypes.
+#### An address book application using constructors and prototypes.
 
 ## Technologies Used
 
-* Javascript
-* HTML
-* Git
+- Javascript
+- HTML
+- Git
 
 ## Description
 
- An address book application using constructors and prototypes made during Week 4 of Epicodus Coding School, "Intermediate Javascript."Allows a user to enter Contact information, save it and display it. Editing features were started but not yet fully functional.
-
+An address book application using constructors and prototypes made during Week 4 of Epicodus Coding School, "Intermediate Javascript."Allows a user to enter Contact information, save it and display it. Editing features were started but not yet fully functional.
 
 ## Setup/Installation Requirements
 
-* Copy the Repo Down
-* Open the link and catalog your contacts!
-* More functionality can always be added, like multiple options for address, types of contact [work, personal, etc.]! There's no such thing as too much organization!
+- Copy the Repo Down
+- Open the link and catalog your contacts!
+- More functionality can always be added, like multiple options for address, types of contact [work, personal, etc.]! There's no such thing as too much organization!
 
 ## Known Bugs
 
-* None
-
+- None
 
 ## License
 
@@ -34,7 +32,11 @@ Copyright (c) 2023 Amanda Guan
 
 # TDD:
 
-describe count(numInput)
-Test: "It should return an array of numbers from 0 to the user's inputted number"
-Code: count(5);
-Expected Output: '0, 1, 2, 3, 4, 5' 
+Describe: Contact()
+Test: 'It will return an object with first name, last name, phone number, email, and address'
+Code: let contact1 = new Contact('Jennifer', 'Bordon, '123-456-7890')
+Output: contact1 = {
+  firstName = Jennifer;
+  lastName = Bordon;
+  phoneNumber = 123-456-7890;
+}
