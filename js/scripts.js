@@ -47,12 +47,14 @@ AddressBook.prototype.deleteContact = function(id) {
 // Business Logic for Contacts ---------
 //TODO: Contact constructor
 //AddressBooks can only do one thing right now: store a list of contacts in key-value pairs
-function Contact(firstName, lastName, phoneNumber, email, address) {
+function Contact(firstName, lastName, phoneNumber, workEmail, personalEmail, homeAddress, workAddress) {
   this.firstName = firstName;
   this.lastName = lastName;
   this.phoneNumber = phoneNumber;
-  this.email = email;
-  this.address = address;
+  this.workEmail = workEmail;
+  this.personalEmail = personalEmail;
+  this.homeAddress = homeAddress;
+  this.workAddress = workAddress;
 }
 
 Contact.prototype.fullName = function() {
@@ -83,8 +85,10 @@ function displayContactDetails(event) {
   document.querySelector(".first-name").innerText = contact.firstName;
   document.querySelector(".last-name").innerText = contact.lastName;
   document.querySelector(".phone-number").innerText = contact.phoneNumber;
-  document.querySelector(".email").innerText = contact.email;
-  document.querySelector(".address").innerText = contact.address;
+  document.querySelector(".work-email").innerText = contact.workEmail;
+  document.querySelector(".personal-email").innerText = contact.personalEmail;
+  document.querySelector(".home-address").innerText = contact.homeAddress;
+  document.querySelector(".work-address").innerText = contact.workAddress;
   document.querySelector("button.delete").setAttribute("id", contact.id);
   document.querySelector("div#contact-details").removeAttribute("class");
 }
@@ -101,20 +105,26 @@ function handleFormSubmission(event) {
   const inputtedFirstName = document.querySelector("input#new-first-name").value;
   const inputtedLastName = document.querySelector("input#new-last-name").value;
   const inputtedPhoneNumber = document.querySelector("input#new-phone-number").value;
-  const inputtedEmail = document.querySelector("input#new-email").value;
-  const inputtedAddress = document.querySelector("input#new-address").value;
+  const inputtedWorkEmail = document.querySelector("input#new-work-email").value;
+  const inputtedPersonalEmail = document.querySelector("input#new-personal-email").value;
+  const inputtedHomeAddress = document.querySelector("input#new-home-address").value;
+  const inputtedWorkAddress = document.querySelector("input#new-work-address").value;
 //Gather user-provided input from the form fields for first name, last name, and phone number, and assign them to the variables inputtedFirstName, inputtedLastName, and inputtedPhoneNumber
-  let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmail, inputtedAddress);//Create a new Contact object, passing in this gathered information as arguments, and saving the new Contact object in the variable newContact.
+  let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedWorkEmail, inputtedPersonalEmail, inputtedHomeAddress, inputtedWorkAddress);//Create a new Contact object, passing in this gathered information as arguments, and saving the new Contact object in the variable newContact.
   addressBook.addContact(newContact);//Add the newContact to our AddressBook using the AddressBook.prototype.addContact()
   // console.log(addressBook.contacts);
   listContacts(addressBook);
-  document.querySelector("input#new-first-name").value = null;
-  document.querySelector("input#new-last-name").value = null;
-  document.querySelector("input#new-phone-number").value = null;
-  document.querySelector("input#new-email").value = null;
-  document.querySelector("input#new-address").value = null;
+  resetInput();
 }
-
+function resetInput(){
+document.querySelector("input#new-first-name").value = null;
+document.querySelector("input#new-last-name").value = null;
+document.querySelector("input#new-phone-number").value = null;
+document.querySelector("input#new-work-email").value = null;
+document.querySelector("input#new-personal-email").value = null;
+document.querySelector("input#new-home-address").value = null;
+document.querySelector("input#new-work-address").value = null;
+}
 window.addEventListener("load", function (){
   document.querySelector("form#new-contact").addEventListener("submit", handleFormSubmission);
   document.querySelector("div#contacts").addEventListener("click", displayContactDetails);
