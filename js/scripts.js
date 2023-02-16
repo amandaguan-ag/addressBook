@@ -47,37 +47,80 @@ AddressBook.prototype.deleteContact = function(id) {
 // Business Logic for Contacts ---------
 //TODO: Contact constructor
 //AddressBooks can only do one thing right now: store a list of contacts in key-value pairs
-function Contact(firstName, lastName, phoneNumber, workEmail, personalEmail, homeAddress, workAddress) {
+function Contact(firstName, lastName, phoneNumber, workEmail, personalEmail) {
   this.firstName = firstName;
   this.lastName = lastName;
   this.phoneNumber = phoneNumber;
   this.workEmail = workEmail;
   this.personalEmail = personalEmail;
-  this.homeAddress = homeAddress;
-  this.workAddress = workAddress;
+  this.addresses = {};
+  this.currentId = 0;
 }
 
 Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 };
 
+  Contact.prototype.fullName = function() {
+    return this.firstName + " " + this.lastName;
+  };
+
+  Contact.prototype.addAddress = function(address) {
+  address.addressId = this.assignId()
+  this.addresses[address.currentId] = address;
+  };
+  
+  Contact.prototype.assignId = function() {
+  this.currentId += 1;
+  return this.currentId;
+  };
+  Contact.prototype.findAddress = function(id) {
+  if (this.addresses[id] !== undefined) {
+  return this.addresses[id];
+  }
+  return false;
+  };
+
+    //Business logic for Address
+  function Address(homeAddress, workAddress) {
+  this.homeAddress = homeAddress;
+  this.workAddress = workAddress;
+  }
+  Address.prototype.fullAddress = function() {
+    return this.homeAddress + " " + this.workAddress;
+  };
 // User Interface Logic ---------
 let addressBook = new AddressBook();//create a new AddressBook object named addressBook. This is a global variable
 
 function listContacts(addressBookToDisplay) {
-  let contactsDiv = document.querySelector("div#contacts");//we save the div that will contain our contacts in a variables called contactsDiv
-  contactsDiv.innerText =  null; //ensures that the user can submit the form to create a new contact over and over and no duplicate contacts will be listed.
-  const ul = document.createElement("ul");
-  Object.keys(addressBookToDisplay.contacts).forEach(function(key) {//use Object.keys() to get all the keys from addressBookToDisplay.contacts
-    //Object.keys() returns an array, so we can call any array method on the returned value
-    //Array.prototype.forEach() to loop through the object keys.
-    const contact = addressBookToDisplay.findContact(key);//grab a contact object by using our AddressBook.prototype.findContact() method.
-    const li = document.createElement("li");
-    li.append(contact.fullName());//create a new list item element for the contact. The text of the list item is set to the contact's full name,
-    li.setAttribute("id", contact.id);//add an id attribute that is equal to the contact's id property
-    ul.append(li);
+  // let contactsList = document.querySelector("ul#contacts");
+   let contactsDiv = document.querySelector("div#contacts");
+   const ul1 = document.createElement("ul");
+  // let htmlForContactInfo = "";
+  Object.keys(addressBookToDisplay.contacts).forEach(function(key) {
+    const contact = addressBookToDisplay.findContact(key);
+    const li1 = document.createElement("li");
+    li1.append(contact.fullName());
+    li1.setAttribute("id", contact.id);
+    ul1.append(li1);
+    // htmlForContactInfo += "<li id=" + contact.id + ">" + contact.firstName + " " + contact.lastName + "</li>";
   });
-  contactsDiv.append(ul);
+  contactsDiv.append(ul1);
+}
+
+function listAddress(contact){
+  let addressesDiv = document.querySelector("div#addresses");
+  const ul2 = document.createElement("ul");
+  // let htmlForAddressInfo = "";
+  Object.keys(contact.addresses).forEach(function(key){
+    const address = contact.findAddress(key);
+    const li2 = document.createElement("li");
+    li2.append(contact.fullAddress());
+    l2.setAttribute("id", address.id);
+    ul2.append(li2);
+  });
+  addressesDiv.append(ul2);
+  // addressList.innerHTML = htmlForAddressInfo;
 }
 
 function displayContactDetails(event) {
@@ -87,10 +130,14 @@ function displayContactDetails(event) {
   document.querySelector(".phone-number").innerText = contact.phoneNumber;
   document.querySelector(".work-email").innerText = contact.workEmail;
   document.querySelector(".personal-email").innerText = contact.personalEmail;
-  document.querySelector(".home-address").innerText = contact.homeAddress;
-  document.querySelector(".work-address").innerText = contact.workAddress;
   document.querySelector("button.delete").setAttribute("id", contact.id);
   document.querySelector("div#contact-details").removeAttribute("class");
+  displayAddressDetails();
+}
+function displayAddressDetails(event) {
+  const address = addressBook.findAddress(event.target.id);
+  document.querySelector(".home-address").innerText = address.homeAddress;
+  document.querySelector(".work-address").innerText = address.workAddress;
 }
 
 function handleDelete(event) {
@@ -111,7 +158,9 @@ function handleFormSubmission(event) {
   const inputtedWorkAddress = document.querySelector("input#new-work-address").value;
 //Gather user-provided input from the form fields for first name, last name, and phone number, and assign them to the variables inputtedFirstName, inputtedLastName, and inputtedPhoneNumber
   let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedWorkEmail, inputtedPersonalEmail, inputtedHomeAddress, inputtedWorkAddress);//Create a new Contact object, passing in this gathered information as arguments, and saving the new Contact object in the variable newContact.
+  let newAddress = new Address(inputtedHomeAddress, inputtedWorkAddress);
   addressBook.addContact(newContact);//Add the newContact to our AddressBook using the AddressBook.prototype.addContact()
+  newContact.addAddress(newAddress);
   // console.log(addressBook.contacts);
   listContacts(addressBook);
   resetInput();
